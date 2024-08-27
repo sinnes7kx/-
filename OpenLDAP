@@ -1,0 +1,252 @@
+##########################################################
+# OpenBSD & OpenLDAP Assessment - 2024.08.27
+# TODO:
+#   - Do NOT modify docker YAML config file
+#   - Use usernames and other credentials as is
+#   - Make sure to use your OWN ssh keys
+  7 # Good Luck!
+  8 ########################################################## 
+  9 
+ 10 ##########################################################
+ 11 # Prepare doas
+ 12 ##########################################################
+ 13 
+ 14 # Create the RCS directory for version control, using pwd to ensure the correct path
+ 15 mkdir -p `pwd`/RCS
+ 16 ln -s `pwd`/RCS /etc/doas,RCS
+ 17 
+ 18 # Create the /etc/doas directory
+ 19 mkdir -p /etc/doas
+ 20 
+ 21 # Initialize the /etc/doas file under version control
+ 22 ci -t- -u /etc/doas
+ 23 
+ 24 # Check out the /etc/doas file for editing
+ 25 co -l /etc/doas
+ 26 
+ 27 # Create the doas.conf configuration file
+ 28 cat <<"EOF" > /etc/doas.conf
+ 29 permit nopass keepenv :wheel
+ 30 EOF
+ 31 
+ 32 # Check in the /etc/doas file with the appropriate message
+ 33 ci -t- -m"Enabled doas for wheel users." -u /etc/doas
+ 34 
+ 35 # Set the correct permissions for /etc/doas
+ 36 chmod 440 /etc/doas
+ 37 
+ 38 ##########################################################
+ 39 # Deploy sysadmins
+ 40 ##########################################################
+ 41 
+ 42 # Create the user 'netudy'
+ 43 useradd -m netudy
+ 44 
+ 45 # Add 'netudy' to the 'wheel' group
+ 46 usermod -G wheel netudy
+ 47 
+ 48 # Set the shell for 'netudy' to bash
+ 49 chsh -s /usr/local/bin/bash netudy
+ 50 
+ 51 # Create the authorized_keys file for SSH
+ 52 cat <<"EOF" > /home/netudy/.ssh/authorized_keys
+ 53 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcMkYWwQRIjAah8w5/OScbjN7OwKaqomjTFhxB+1CzUnbpMvRey6ONjWmRuo6VgUOjoenKyPFeI6+205dhK0chPHqC3qZvkq8T9epT0KKRuxFRohWKD2TFpH9UFkyHVV6e6IxnnZpwnmLfIBe6VNSWNkewid7AzyvxhE2NgpufT03eqbHdRjrVoMtKtNZC9Upv/w17R253/VWVLdzzGjU4IHEHCPf4U5HDyjpXH1qTHm3ZFhYO9jGIca85rRgsIldVaJ8zJb++Fbhk7hDtzUIO+lqFsOEUwVzl4HKuQePB/vuw1yDqoQZsfwp5w56d3TPqzjzsTArfRuLdL3Q1VTcX netudy@netudys-MBP.lan
+ 54 EOF
+ 55 
+ 56 # Create ssh config (only for linux/windows environments, OSX won't need)
+ 57 cat <<"EOF" > /home/netudy/.ssh/config
+ 58 # GitHub
+ 59 Host github.com
+ 60   HostName github.com
+ 61   User git
+ 62   IdentityFile ~/.ssh/netudy.wsl
+ 63 
+ 64 # OpenBSD
+ 65 Host 10.49.90.129
+ 66   HostName 10.49.90.129
+ 67   IdentityFile ~/.ssh/netudy.wsl
+ 68 EOF
+ 69 
+ 70 # Set the correct permissions for the user's home directory and SSH keys
+ 71 chmod 750 /home/netudy/
+ 72 chmod 600 /home/netudy/.ssh/authorized_keys
+ 73 
+ 74 # Verify the SHA256 checksum of the authorized_keys file
+ 75 sha256 /home/netudy/.ssh/authorized_keys
+ 76 
+ 77 ##########################################################
+ 78 # Installation packages
+ 79 ##########################################################
+ 80 
+ 81 export PKG_PATH=http://ftp.eu.openbsd.org/pub/OpenBSD/`uname -r`/packages/`machine -a`/
+ 82 
+ 83 cat <<"EOF" | while read package; do pkg_add -v $package; done
+ 84 bash-5.1.16.tgz
+ 85 wget-1.21.3.tgz
+ 86 emacs-28.2-no_x11.tgz
+ 87 pftop-0.7p19.tgz
+ 88 nmap-7.91p2.tgz
+ 89 ifstat-1.1p5.tgz
+ 90 minicom-2.8.tgz
+ 91 picocom-3.1.tgz
+ 92 conserver-8.2.7.tgz
+ 93 screen-4.9.0.tgz
+ 94 python-3.9.14.tgz
+ 95 EOF
+ 96 
+ 97 ln -sf /usr/local/bin/python3.9 /usr/bin/python3
+ 98 
+ 99 ##########################################################
+100 # Secure SSH
+101 ##########################################################
+102 
+103 # Change to the SSH configuration directory
+104 cd /etc/ssh/
+105 
+106 # Create the RCS directory for version control, ensuring correct permissions and path
+107 mkdir -pm700 `pwd`/RCS
+108 ln -s `pwd`/RCS /etc/ssh/RCS
+109 
+110 # Initialize the sshd_config file under version control
+111 ci -t- -u /etc/ssh/sshd_config
+112 
+113 # Check out the sshd_config file for editing
+114 co -l /etc/ssh/sshd_config
+115 
+116 # Apply the patch to secure SSH
+117 cat <<EOF | patch -p0
+118 ===================================================================
+119 RCS file: /etc/ssh/RCS/sshd_config,v
+120 retrieving revision 1.1
+121 diff -u -r1.1 /etc/ssh/sshd_config
+122 --- /etc/ssh/sshd_config        2021/07/02 05:11:21     1.1
+123 +++ /etc/ssh/sshd_config        2024/08/20 01:51:13
+124 @@ -1,4 +1,4 @@
+125 -#      $OpenBSD: sshd_config,v 1.104 2021/07/02 05:11:21 dtucker Exp $
+126 +#      $OpenBSD: sshd_config,v 1.104 2021/07/02 05:11:21 dtucker Exp $
+127 
+128  # This is the sshd server system-wide configuration file.  See
+129  # sshd_config(5) for more information.
+130 @@ -35,7 +35,7 @@
+131  # Authentication:
+132 
+133  #LoginGraceTime 2m
+134 -PermitRootLogin yes
+135 +PermitRootLogin no
+136  #StrictModes yes
+137  #MaxAuthTries 6
+138  #MaxSessions 10
+139 @@ -63,7 +63,7 @@
+140  #IgnoreRhosts yes
+141 
+142  # To disable tunneled clear text passwords, change to no here!
+143 -#PasswordAuthentication yes
+144 +PasswordAuthentication no
+145  #PermitEmptyPasswords no
+146 
+147  # Change to no to disable s/key passwords
+148 EOF
+149 
+150 # Check in the sshd_config file with the appropriate message
+151 ci -t- -m"Securing SSH" -u /etc/ssh/sshd_config
+152 
+153 # Reload SSH service to apply changes
+154 kill -HUP `cat /var/run/sshd.pid`
+155 
+156 ssh netudy@10.49.90.129
+157 
+158 ##########################################################
+159 # OpenLDAP on Ubuntu Server 20.04 LTS
+160 # https://releases.ubuntu.com/20.04/ubuntu-20.04.6-live-server-amd64.iso
+161 ##########################################################
+162 
+163 # Install net-tools
+164 sudo apt install net-tools -y
+165 
+166 # Update and upgrade system packages
+167 sudo apt update && sudo apt upgrade -y
+168 
+169 # Install Docker
+170 sudo apt install -y docker.io
+171 
+172 # Enable Docker to start on boot
+173 sudo systemctl enable docker
+174 sudo systemctl start docker
+175 
+176 # Install Docker Compose
+177 sudo apt install -y docker-compose
+178 
+179 # Disable UFW (Uncomplicated Firewall) on Ubuntu to avoid conflicts with other firewalls
+180 sudo ufw disable
+181 
+182 # Create a directory for the OpenLDAP setup
+183 mkdir ~/openldap-netudy
+184 cd ~/openldap-netudy
+185 
+186 # Create a Docker Compose YAML file
+187 cat <<"EOF" > docker-compose.yaml
+188 version: '3'
+189 
+190 services:
+191   ldap:
+192     image: osixia/openldap:1.5.0  # Use the osixia OpenLDAP Docker image
+193     container_name: ldap-server  # Name the container "ldap-server"
+194     environment:
+195       LDAP_ORGANISATION: "Example Corp"
+196       LDAP_DOMAIN: "example.org"
+197       LDAP_ADMIN_PASSWORD: "adminpassword"
+198     ports:
+199       - "389:389"  # LDAP port
+200       - "636:636"  # LDAPS port
+201     volumes:
+202       - ldap_data:/var/lib/ldap  # Persist LDAP data
+203       - ldap_config:/etc/ldap/slapd.d  # Persist LDAP configuration
+204     restart: always
+205 
+206   phpldapadmin:
+207     image: osixia/phpldapadmin:0.9.0  # Use the osixia phpLDAPadmin Docker image
+208     container_name: ldap-admin  # Name the container "ldap-admin"
+209     environment:
+210       PHPLDAPADMIN_LDAP_HOSTS: ldap  # Correct service name
+211       PHPLDAPADMIN_HTTPS: "false"  # Disable HTTPS and use plain HTTP
+212     ports:
+213       - "8080:80"  # Access phpLDAPadmin over HTTP on port 8080
+214     depends_on:
+215       - ldap  # Ensure OpenLDAP starts before phpLDAPadmin
+216     restart: always
+217 
+218 volumes:
+219   ldap_data:
+220     driver: local  # Use a local volume to persist LDAP data
+221   ldap_config:
+222     driver: local  # Use a local volume to persist LDAP configuration
+223 EOF
+224 
+225 # Add your current user to the 'docker' group to avoid using 'sudo' for Docker commands
+226 sudo usermod -aG docker $USER
+227 
+228 # Log out and back in, or run the following command to apply group changes without logging out
+229 newgrp docker
+230 
+231 # Launch the OpenLDAP and phpLDAPadmin services using Docker Compose
+232 docker-compose up -d
+233 
+234 # Check the status of the containers to ensure they are running
+235 docker ps
+236 
+237 # Access phpLDAPadmin through your web browser:
+238 "10.49.90.12:8080" # Replace with your ubuntu server ip address
+239 
+240 # Log in to phpLDAPadmin using the following credentials:
+241 "cn=admin,dc=example,dc=org"
+242 "adminpassword"
+243 
+244 # Once logged in, manage your LDAP directory (add, edit, delete entries as needed)
+245 
+246 # To stop the containers, run the following command
+247 docker-compose down
+248 
+249 # To update the Docker images, pull the latest versions and restart the services
+250 docker-compose pull
+251 docker-compose up -d
+252
