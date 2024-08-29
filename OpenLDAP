@@ -68,7 +68,7 @@ Host github.com
 # OpenBSD
 Host 10.49.90.129
   HostName 10.49.90.129
-  IdentityFile ~/.ssh/fa1c0n.wsl
+  IdentityFile ~/.ssh/sinnes7kx.wsl
 EOF
 
 # Set the correct permissions for the user's home directory and SSH keys
