@@ -1,0 +1,158 @@
+//*  Terminalkommandon för Systemadministration och Nätverkshantering på Ubuntu, Debian och OpenBSD
+//*  Completion requirements
+//*  Systeminformation och övervakning
+  uname -a - Visa information om systemet
+  uname -r - Visa kernel-version
+  hostname - Visa eller sätt systemets hostname
+  uptime - Visa hur länge systemet har varit igång
+  top - Visa aktuella processer
+  htop - Interaktiv processövervakning (måste installeras)
+  ps aux - Lista alla processer som körs
+  vmstat - Visa systemets prestandametrik
+  iostat - Disk I/O statistik
+  free -h - Visa tillgängligt och använt minne
+  df -h - Visa diskutrymme
+  du -sh * - Visa storleken på kataloger och filer
+  lsblk - Visa blockenheter (diskar och partitioner)
+  lscpu - Visa information om CPU
+  lspci - Visa PCI-enheter
+  lsusb - Visa USB-enheter
+  dmesg - Visa systemmeddelanden
+  last - Visa senaste inloggningar
+  who - Visa vilka användare som är inloggade
+  whoami - Visa ditt aktuella användarnamn
+  id - Visa användar- och grupp-ID:n
+  hostnamectl - Hantera systemets hostname och andra inställningar
+  uptime - Visa systemets drifttid
+  uname -m - Visa maskinens arkitektur
+  lsmod - Lista laddade moduler (Ubuntu/Debian)
+  kldstat - Lista laddade moduler (OpenBSD)
+  Filhantering
+  ls -l - Lista filer och kataloger med detaljer
+  cd - Byt katalog
+  pwd - Visa nuvarande katalog
+  mkdir - Skapa en ny katalog
+  rmdir - Ta bort en tom katalog
+  rm -rf - Ta bort filer och kataloger rekursivt
+  cp - Kopiera filer eller kataloger
+  mv - Flytta eller döpa om filer och kataloger
+  touch - Skapa en tom fil eller uppdatera filens tidsstämpel
+  cat - Visa innehållet i en fil
+  more - Visa en fil en sida åt gången
+  less - Som more, men med fler funktioner
+  head - Visa de första raderna i en fil
+  tail - Visa de sista raderna i en fil
+  tail -f - Visa nya rader som läggs till i en fil i realtid
+  ln -s - Skapa en symbolisk länk
+  chmod - Ändra fil- eller katalogrättigheter
+  chown - Ändra ägare av en fil eller katalog
+  chgrp - Ändra gruppen för en fil eller katalog
+  find - Sök efter filer och kataloger
+  locate - Snabbsök efter filer (måste installeras)
+  grep - Sök efter mönster i filer
+  wc - Räkna rader, ord och tecken i filer
+  diff - Jämför två filer rad för rad
+  tar -cvf - Skapa ett arkiv
+  tar -xvf - Extrahera ett arkiv
+  gzip - Komprimera filer med gzip
+  gunzip - Dekomprimera gzip-filer
+  zip - Komprimera filer till ett ZIP-arkiv
+  unzip - Extrahera filer från ett ZIP-arkiv
+  bzip2 - Komprimera filer med bzip2
+  bunzip2 - Dekomprimera bzip2-filer
+  scp - Kopiera filer över SSH
+  rsync - Synkronisera filer och kataloger
+  dd - Kopiera och konvertera filer och diskar
+  stat - Visa detaljerad information om en fil
+  file - Identifiera filtyp
+  split - Dela upp filer i mindre delar
+  tr - Översätt eller radera tecken i en fil
+  sort - Sortera rader i en fil
+  uniq - Filtrera bort dubbletter i en fil
+  cut - Extrahera kolumner från en fil
+  paste - Slå samman rader från flera filer
+  shred - Säkert radera filer
+  xargs - Bygg och kör kommando från standard input
+  Paket- och programhantering
+  apt-get update - Uppdatera paketlistor (Ubuntu/Debian)
+  apt-get upgrade - Uppgradera alla installerade paket (Ubuntu/Debian)
+  apt-get install - Installera ett paket (Ubuntu/Debian)
+  apt-get remove - Ta bort ett paket (Ubuntu/Debian)
+  apt-cache search - Sök efter paket (Ubuntu/Debian)
+  apt-cache show - Visa detaljer om ett paket (Ubuntu/Debian)
+  dpkg -i - Installera ett .deb-paket (Ubuntu/Debian)
+  dpkg -r - Avinstallera ett paket (Ubuntu/Debian)
+  dpkg -l - Lista alla installerade paket (Ubuntu/Debian)
+  apt-get autoremove - Ta bort oanvända paket (Ubuntu/Debian)
+  pkg_add - Installera ett paket (OpenBSD)
+  pkg_info - Visa information om installerade paket (OpenBSD)
+  pkg_delete - Avinstallera ett paket (OpenBSD)
+  pkg_add -u - Uppgradera installerade paket (OpenBSD)
+  apt-mark hold - Frys ett paket så att det inte uppgraderas (Ubuntu/Debian)
+  snap install - Installera ett Snap-paket (Ubuntu)
+  snap remove - Avinstallera ett Snap-paket (Ubuntu)
+  snap list - Lista installerade Snap-paket (Ubuntu)
+  brew install - Installera ett Homebrew-paket (Linux/WSL)
+  brew update - Uppdatera Homebrew och dess paket (Linux/WSL)
+  brew upgrade - Uppgradera installerade Homebrew-paket (Linux/WSL)
+  Nätverkskommandon
+  ifconfig - Visa och konfigurera nätverksgränssnitt (Debian/OpenBSD)
+  ip addr - Visa IP-adresser (Ubuntu/Debian)
+  ip link - Hantera nätverksgränssnitt (Ubuntu/Debian)
+  ping - Testa nätverksanslutningar
+  traceroute - Spåra vägen till en värd (Ubuntu/Debian)
+  tracert - Spåra vägen till en värd (Debian)
+  netstat -r - Visa routingtabell
+  netstat -i - Visa nätverksgränssnitt
+  netstat -an - Visa alla öppna nätverksanslutningar
+  ss -tuln - Visa öppna portar och lyssnande tjänster
+  dig - DNS-uppslagning (Ubuntu/Debian)
+  nslookup - Fråga DNS-servrar (Debian/OpenBSD)
+  route - Visa/manipulera IP-routingtabellen (Debian/OpenBSD)
+  iwconfig - Konfigurera trådlösa gränssnitt
+  ethtool - Visa/ändra inställningar för nätverksgränssnitt
+  curl - Gör HTTP-begäranden från terminalen
+  wget - Ladda ner filer via HTTP, HTTPS och FTP
+  ftp - FTP-klient
+  ssh - Anslut till en fjärrvärd via SSH
+  scp - Kopiera filer via SSH
+  telnet - Telnet-klient
+  nmap - Nätverksskanner
+  hostname - Visa eller ändra systemets hostname
+  ip route - Visa och ändra routingtabeller
+  ip neigh - Visa/ändra ARP-cache
+  iptables - Hantera Linux-brandväggar
+  ufw - Okomplicerad brandväggshantering (Ubuntu)
+  tcpdump - Fångst och analys av nätverkstrafik
+  Användarhantering
+  adduser - Lägg till en ny användare (Ubuntu/Debian)
+  useradd - Skapa en ny användare (Debian/OpenBSD)
+  passwd - Ändra en användares lösenord
+  deluser - Ta bort en användare (Ubuntu/Debian)
+  usermod - Ändra en användares information
+  groupadd - Skapa en ny grupp
+  groupdel - Ta bort en grupp
+  groups - Visa användarens grupper
+  sudo - Kör ett kommando med superanvändarrättigheter
+  su - Byt till superanvändare eller annan användare
+  visudo - Redigera sudoers-filen
+  who - Visa vilka som är inloggade
+  w - Visa information om aktiva användare
+  last - Visa historik för inloggningar
+  finger - Visa information om användare (Debian/OpenBSD)
+  Arkiv- och säkerhetskopiering
+  tar -cvf - Skapa ett tar-arkiv
+  tar -xvf - Extrahera ett tar-arkiv
+  rsync -av - Synkronisera filer och kataloger med arkiveringsattribut
+  dd - Kopiera och konvertera filer
+  cpio - Kopiera filer till och från arkiv
+  gzip - Komprimera filer
+  gunzip - Dekomprimera gzip-filer
+  bzip2 - Komprimera filer med bzip2
+  bunzip2 - Dekomprimera bzip2-filer
+  zip - Komprimera filer till ett ZIP-arkiv
+  unzip - Extrahera filer från ett ZIP-arkiv
+  tftp - Trivial FTP-klient för enkel filöverföring
+  ssh-keygen - Skapa SSH-nycklar
+  gpg - Kryptera och signera filer med GNU Privacy Guard
+  shred - Säkert radera filer
